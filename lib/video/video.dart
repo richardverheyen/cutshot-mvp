@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cutshot/services/services.dart';
 import 'package:flutter/material.dart';
 
 class VideoScreen extends StatelessWidget {
-  const VideoScreen({super.key});
+  final Video video;
+
+  const VideoScreen({super.key, required this.video});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class VideoScreen extends StatelessWidget {
         },
         child: Center(
           child: Hero(
-            tag: 'imageHero',
+            tag: video.path,
             child: Image.network(
               'https://picsum.photos/250?image=9',
             ),

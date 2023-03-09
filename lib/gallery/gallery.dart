@@ -1,91 +1,58 @@
+import 'package:cutshot/profile/profile.dart';
 import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../services/services.dart';
 import '../shared/shared.dart';
+import 'video_item.dart';
 
-class GalleryScreen extends StatefulWidget {
+class GalleryScreen extends StatelessWidget {
   const GalleryScreen({super.key});
 
   @override
-  State<GalleryScreen> createState() => _GalleryScreenState();
-}
-
-class _GalleryScreenState extends State<GalleryScreen> {
-  final List<XFile> _videoFileList = [];
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _onButtonPressed() async {
-    final XFile? newVideo = await _picker.pickVideo(
-        source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
-
-    setState(() {
-      _videoFileList.add(newVideo!);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Image Picker Example'),
-      ),
-      body: Center(
-          child: GridView.builder(
-        itemCount: _videoFileList.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.0,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-        ),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const VideoScreen();
-                }));
-              },
-              child: Hero(
-                  tag: 'imageHero',
-                  child: Column(children: [
-                    Image.network(
-                      'https://picsum.photos/250?image=9',
-                    ),
-                    Text(_videoFileList[index].path),
-                  ])));
-          // return Card(
-          //   child: Column(
-          //     children: [
-          //       Image.file(File(_videoFileList[index].path)),
-          //       Text(_videoFileList[index].path),
-          //     ],
-          //   ),
-          // );
-        },
-      )),
-      // body: ListView.builder(
-      //   itemCount: _videoFileList.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     // in a 2 column grid display a thumbnail of the video inside a material card component
-      //     return Card(
-      //       child: Column(
-      //         children: [
-      //           Image.file(File(_videoFileList[index].path)),
-      //           Text(_videoFileList[index].path),
-      //         ],
-      //       ),
-      //     );
+    return FutureBuilder<List<Video>>(
+      future: FirestoreService().getVideos(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingScreen();
+        } else if (snapshot.hasError) {
+          return Center(
+            child: ErrorMessage(message: snapshot.error.toString()),
+          );
+        } else if (snapshot.hasData) {
+          var videos = snapshot.data!;
 
-      //     // return Image.file(File(_videoFileList![index].path));
-      //   },
-      // ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onButtonPressed,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-      bottomNavigationBar: const BottomNavBar(),
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.deepPurple,
+              title: const Text('Gallery'),
+              actions: [
+                IconButton(
+                    icon: Icon(
+                      FontAwesomeIcons.circleUser,
+                      color: Colors.pink[200],
+                    ),
+                    onPressed: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const ProfileScreen();
+                        })))
+              ],
+            ),
+            body: GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20.0),
+              crossAxisSpacing: 10.0,
+              crossAxisCount: 2,
+              children: videos.map((video) => VideoItem(video: video)).toList(),
+            ),
+          );
+        } else {
+          return const Text('No videos found in Firestore. Check database');
+        }
+      },
     );
   }
 }
