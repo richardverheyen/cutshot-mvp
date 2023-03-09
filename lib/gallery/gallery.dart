@@ -2,6 +2,8 @@ import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../shared/shared.dart';
+
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
 
@@ -83,6 +85,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
