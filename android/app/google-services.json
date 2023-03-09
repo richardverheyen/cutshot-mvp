@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "745048393213",
+    "project_id": "cutshot-35dae",
+    "storage_bucket": "cutshot-35dae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745048393213:android:3e25ba27b2b5cde586c594",
+        "android_client_info": {
+          "package_name": "com.example.cutshot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745048393213-3jpb2bjslujv8omi963cbui9ook2cciu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL9whmtwYUcg6o9191YtsSZn9qDHZ93oc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745048393213-3jpb2bjslujv8omi963cbui9ook2cciu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
