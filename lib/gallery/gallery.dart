@@ -27,13 +27,11 @@ class GalleryScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.deepPurple,
               title: const Text('Gallery'),
               actions: [
                 IconButton(
                     icon: Icon(
                       FontAwesomeIcons.circleUser,
-                      color: Colors.pink[200],
                     ),
                     onPressed: () => Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
