@@ -1,8 +1,6 @@
 import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
 import 'package:cutshot/services/models.dart';
-// import 'package:cutshot/shared/progress_bar.dart';
-// import 'package:cutshot/topics/drawer.dart';
 
 class VideoItem extends StatelessWidget {
   final Video video;

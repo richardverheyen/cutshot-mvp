@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:cutshot/services/services.dart';
+import 'package:cutshot/services/models.dart';
 import 'package:flutter/material.dart';
 
 class VideoScreen extends StatelessWidget {

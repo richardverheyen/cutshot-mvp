@@ -8,8 +8,32 @@ import '../services/services.dart';
 import '../shared/shared.dart';
 import 'video_item.dart';
 
-class GalleryScreen extends StatelessWidget {
+class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
+
+  @override
+  State<GalleryScreen> createState() => _GalleryScreenState();
+}
+
+class _GalleryScreenState extends State<GalleryScreen> {
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _addVideoToFirebase() async {
+    final XFile? videoXFile = await _picker.pickVideo(
+        source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
+
+    //get first frame of video as thumbnail
+    final Map<String, dynamic> json = {
+      'path': videoXFile!.path,
+      // thumbnail: 'https://picsum.photos/250?image=9',
+      'title': videoXFile.name,
+    };
+
+    //create new Video model instance
+    // final video = Video.fromJson(json);
+
+    FirestoreService().createVideo(json);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +69,11 @@ class GalleryScreen extends StatelessWidget {
               crossAxisSpacing: 10.0,
               crossAxisCount: 2,
               children: videos.map((video) => VideoItem(video: video)).toList(),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: _addVideoToFirebase,
+              tooltip: 'Add Video',
+              child: const Icon(Icons.add),
             ),
           );
         } else {

@@ -1,13 +1,34 @@
-import 'package:json_annotation/json_annotation.dart';
+// import 'package:json_annotation/json_annotation.dart';
 part 'models.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
+// class Video {
+//   String title;
+//   String path;
+
+//   Video({this.title = '', this.path = ''});
+//   factory Video.fromJson(Map<String, dynamic> json) => _$VideoFromJson(json);
+//   Map<String, dynamic> toJson() => _$VideoToJson(this);
+// }
+
 class Video {
-  String title;
-  String path;
-  Video({this.title = '', this.path = ''});
-  factory Video.fromJson(Map<String, dynamic> json) => _$VideoFromJson(json);
-  Map<String, dynamic> toJson() => _$VideoToJson(this);
+  Video({required this.title, required this.path});
+
+  Video.fromJson(Map<String, dynamic> json)
+      : this(
+          title: json['title']! as String,
+          path: json['path']! as String,
+        );
+
+  final String title;
+  final String path;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'path': path,
+    };
+  }
 }
 
 // @JsonSerializable()
