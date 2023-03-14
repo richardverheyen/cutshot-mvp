@@ -46,6 +46,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final Map<String, dynamic> json = {
       'path': videoXFile.path,
       'thumbnail': temporaryFilePath,
+      'lastModified': await videoXFile.lastModified(),
       'title': videoXFile.name,
     };
 

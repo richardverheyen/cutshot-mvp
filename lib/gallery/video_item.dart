@@ -1,6 +1,7 @@
 import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
 import 'package:cutshot/services/models.dart';
+import 'package:intl/intl.dart';
 
 class VideoItem extends StatelessWidget {
   final Video video;
@@ -35,7 +36,7 @@ class VideoItem extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Text(
-                    video.title,
+                    DateFormat('d/MMM/yy').format(video.lastModified.toDate()),
                     style: const TextStyle(
                       height: 1.5,
                       fontWeight: FontWeight.bold,
