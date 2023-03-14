@@ -6,24 +6,29 @@ class VideoScreen extends StatelessWidget {
 
   const VideoScreen({super.key, required this.video});
 
+  Future<void> _uploadVideo() async {
+    print('Upload Video');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Details'),
+        title: Text(video.title),
       ),
-      body: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Center(
-          child: Hero(
-            tag: video.path,
-            child: Image.asset(
-              video.thumbnail,
-              fit: BoxFit.contain,
+      body: Center(
+        child: Column(
+          children: [
+            Hero(
+              tag: video.path,
+              child: Image.asset(
+                video.thumbnail,
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
+            ElevatedButton(
+                onPressed: _uploadVideo, child: const Text('Upload Video'))
+          ],
         ),
       ),
     );
