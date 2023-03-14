@@ -16,13 +16,12 @@ class FirestoreService {
   }
 
   /// Updates the current user's report document after completing quiz
-  Future<void> createVideo(dynamic json) async {
+  Future<void> createVideo(dynamic data) async {
     CollectionReference videos =
         FirebaseFirestore.instance.collection('videos');
 
     videos
-        // .add(video)
-        .add(json)
+        .add(data)
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
