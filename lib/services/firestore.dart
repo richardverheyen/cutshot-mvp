@@ -22,7 +22,7 @@ class FirestoreService {
 
     videos
         .add(data)
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .then((value) => print("Video Added"))
+        .catchError((error) => print("Failed to add video: $error"));
   }
 }

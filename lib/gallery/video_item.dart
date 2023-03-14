@@ -26,15 +26,10 @@ class VideoItem extends StatelessWidget {
             children: [
               Flexible(
                 flex: 3,
-                child: SizedBox(
-                    child: Image.network(
-                  'https://picsum.photos/250?image=9',
-                )
-                    // child: Image.asset(
-                    //   'assets/covers/${topic.img}',
-                    //   fit: BoxFit.contain,
-                    // ),
-                    ),
+                child: Image.asset(
+                  video.thumbnail,
+                  fit: BoxFit.contain,
+                ),
               ),
               Flexible(
                 child: Padding(

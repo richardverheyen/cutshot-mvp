@@ -4,6 +4,8 @@ import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../services/services.dart';
 import '../shared/shared.dart';
@@ -31,10 +33,19 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final XFile? videoXFile = await _picker.pickVideo(
         source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
 
+    final temporaryFilePath = await VideoThumbnail.thumbnailFile(
+      video: videoXFile!.path,
+      thumbnailPath: (await getTemporaryDirectory()).path,
+      imageFormat: ImageFormat.WEBP,
+      maxHeight:
+          200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+      quality: 90,
+    );
+
     //get first frame of video as thumbnail
     final Map<String, dynamic> json = {
-      'path': videoXFile!.path,
-      // thumbnail: 'https://picsum.photos/250?image=9',
+      'path': videoXFile.path,
+      'thumbnail': temporaryFilePath,
       'title': videoXFile.name,
     };
 

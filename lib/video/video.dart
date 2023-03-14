@@ -19,8 +19,9 @@ class VideoScreen extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: video.path,
-            child: Image.network(
-              'https://picsum.photos/250?image=9',
+            child: Image.asset(
+              video.thumbnail,
+              fit: BoxFit.contain,
             ),
           ),
         ),
