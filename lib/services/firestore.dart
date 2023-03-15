@@ -6,15 +6,6 @@ import 'package:cutshot/services/services.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Reads all documments from the topics collection
-  Future<List<Video>> getVideos() async {
-    var ref = _db.collection('videos');
-    var snapshot = await ref.get();
-    var data = snapshot.docs.map((s) => s.data());
-    var videos = data.map((d) => Video.fromJson(d));
-    return videos.toList();
-  }
-
   /// Updates the current user's report document after completing quiz
   Future<void> createVideo(dynamic data) async {
     CollectionReference videos =

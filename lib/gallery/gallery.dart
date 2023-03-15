@@ -24,7 +24,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
   final _videosStream = FirebaseFirestore.instance
       .collection('videos')
       .withConverter<Video>(
-        fromFirestore: (snapshot, _) => Video.fromJson(snapshot.data()!),
+        fromFirestore: (snapshot, _) =>
+            Video.fromJson(snapshot.id, snapshot.data()!),
         toFirestore: (movie, _) => movie.toJson(),
       )
       .snapshots();
@@ -89,6 +90,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             crossAxisCount: 2,
             children: snapshot.data!.docs.map((DocumentSnapshot snapshot) {
               Video data = snapshot.data()! as Video;
+              print(data);
               return VideoItem(video: data);
             }).toList(),
           ),

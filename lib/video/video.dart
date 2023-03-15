@@ -1,4 +1,4 @@
-import 'package:cutshot/services/models.dart';
+import 'package:cutshot/services/services.dart';
 import 'package:flutter/material.dart';
 
 class VideoScreen extends StatelessWidget {
@@ -7,7 +7,7 @@ class VideoScreen extends StatelessWidget {
   const VideoScreen({super.key, required this.video});
 
   Future<void> _uploadVideo() async {
-    print('Upload Video');
+    StorageService().storeVideo(video);
   }
 
   @override
