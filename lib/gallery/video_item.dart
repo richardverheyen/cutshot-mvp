@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cutshot/services/models.dart';
 import 'package:intl/intl.dart';
 
+import '../services/services.dart';
+
 class VideoItem extends StatelessWidget {
   final Video video;
   const VideoItem({super.key, required this.video});
@@ -26,16 +28,33 @@ class VideoItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
-                flex: 3,
-                child: Image.asset(
-                  video.thumbnail,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: Text(
+                  flex: 3,
+                  child: Image.asset(
+                    video.thumbnail,
+                    fit: BoxFit.contain,
+                  )
+                  // FutureBuilder<String>(
+                  //   future: StorageService().getThumbnailUrl(video),
+                  //   builder:
+                  //       (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       return Image.network(
+                  //         snapshot.data!,
+                  //         fit: BoxFit.contain,
+                  //       );
+                  //     } else {
+                  //       return Image.network(
+                  //         "https://via.placeholder.com/150",
+                  //         fit: BoxFit.contain,
+                  //       );
+                  //     }
+                  //   },
+                  // ),
+                  ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
                     DateFormat('d/MMM/yy').format(video.lastModified.toDate()),
                     style: const TextStyle(
                       height: 1.5,
@@ -44,9 +63,13 @@ class VideoItem extends StatelessWidget {
                     overflow: TextOverflow.fade,
                     softWrap: false,
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  video.videoStored
+                      ? const Icon(Icons.visibility_off)
+                      : const Icon(Icons.cloud_off),
+                  const SizedBox(width: 8)
+                ],
               ),
-              // Flexible(child: TopicProgress(topic: topic)),
             ],
           ),
         ),
@@ -54,31 +77,3 @@ class VideoItem extends StatelessWidget {
     );
   }
 }
-
-// class TopicScreen extends StatelessWidget {
-//   final Topic topic;
-
-//   const TopicScreen({super.key, required this.topic});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.transparent,
-//       ),
-//       body: ListView(children: [
-//         Hero(
-//           tag: topic.img,
-//           child: Image.asset('assets/covers/${topic.img}',
-//               width: MediaQuery.of(context).size.width),
-//         ),
-//         Text(
-//           topic.title,
-//           style: const TextStyle(
-//               height: 2, fontSize: 20, fontWeight: FontWeight.bold),
-//         ),
-//         QuizList(topic: topic)
-//       ]),
-//     );
-//   }
-// }

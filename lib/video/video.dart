@@ -20,14 +20,34 @@ class VideoScreen extends StatelessWidget {
         child: Column(
           children: [
             Hero(
-              tag: video.path,
-              child: Image.asset(
-                video.thumbnail,
-                fit: BoxFit.contain,
-              ),
-            ),
-            ElevatedButton(
-                onPressed: _uploadVideo, child: const Text('Upload Video'))
+                tag: video.path,
+                child: Image.asset(
+                  video.thumbnail,
+                  fit: BoxFit.contain,
+                )
+                //     FutureBuilder<String>(
+                //   future: StorageService().getThumbnailUrl(video),
+                //   builder:
+                //       (BuildContext context, AsyncSnapshot<String> snapshot) {
+                //     if (snapshot.hasData) {
+                //       return Image.network(
+                //         snapshot.data!,
+                //         fit: BoxFit.contain,
+                //       );
+                //     } else {
+                //       return Image.network(
+                //         "https://via.placeholder.com/150",
+                //         fit: BoxFit.contain,
+                //       );
+                //     }
+                //   },
+                // ),
+                ),
+            video.videoStored
+                ? ElevatedButton(
+                    onPressed: _uploadVideo, child: const Text('Upload Video'))
+                : ElevatedButton(
+                    onPressed: _uploadVideo, child: const Text('Upload Video')),
           ],
         ),
       ),

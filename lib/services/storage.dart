@@ -29,4 +29,19 @@ class StorageService {
       print("Error: $e");
     }
   }
+
+  Future<String> getThumbnailUrl(Video video) async {
+    final storageRef = storage.ref();
+    final thumbnailRef = storageRef.child('${video.id}/thumbnail');
+
+    try {
+      final url = await thumbnailRef.getDownloadURL();
+      video.thumbnail = url;
+      print('instance of ');
+    } on FirebaseException catch (e) {
+      print("Error: $e");
+    }
+
+    return video.thumbnail;
+  }
 }
