@@ -43,33 +43,33 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
       startTime.toString(),
       '-t',
       (endTime - startTime).toString(),
-      '-c:v',
-      'mpeg4',
-      '-b:v',
-      '1M',
-      '-c:a',
+      '-c',
       'copy',
       '-strict',
       '-2',
       outputPath,
     ];
 
-    await FFmpegKit.executeAsync(arguments.join(' ')).then((ffCommand) async {
-      // final returnCode = await ffCommand.getReturnCode();
-      // if (ReturnCode.isSuccess(returnCode)) {
-      setState(() {
-        _isTrimming = false;
-      });
-      widget.onTrimmingComplete(File(outputPath));
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //     content: Text('Failed to trim video!'),
-      //     backgroundColor: Colors.red,
-      //   ));
-      //   setState(() {
-      //     _isTrimming = false;
-      //   });
-      // }
+    // https://pub.dev/documentation/ffmpeg_kit_flutter/latest/ffmpeg_kit/FFmpegKit/executeAsync.html
+    await FFmpegKit.executeAsync(arguments.join(' '), (session) async {
+      final returnCode = await session.getReturnCode();
+
+      if (ReturnCode.isSuccess(returnCode)) {
+        print('successfully trimmed video {returnCode: $session}}');
+        setState(() {
+          _isTrimming = false;
+        });
+        widget.onTrimmingComplete(File(outputPath));
+      } else {
+        print('failed to trim video {returnCode: $session}');
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Failed to trim video!'),
+          backgroundColor: Colors.red,
+        ));
+        setState(() {
+          _isTrimming = false;
+        });
+      }
     });
   }
 

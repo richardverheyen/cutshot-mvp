@@ -36,7 +36,7 @@ class _VideoExporterWidgetState extends State<VideoExporterWidget> {
     await widget.videoFile.copy(outputPath);
 
     final isSuccess =
-        await GallerySaver.saveVideo(outputPath, albumName: 'Trimmed Videos');
+        await GallerySaver.saveVideo(outputPath, albumName: 'Cutshot Clips');
 
     if (isSuccess != null) {
       if (isSuccess) {
@@ -56,39 +56,6 @@ class _VideoExporterWidgetState extends State<VideoExporterWidget> {
       });
     }
   }
-
-  // Future<void> _exportVideo() async {
-  //   setState(() {
-  //     _isExporting = true;
-  //   });
-
-  //   final appDirectory = await getExternalStorageDirectory();
-  //   final outputPath =
-  //       '${appDirectory!.path}/${DateTime.now().millisecondsSinceEpoch}_exported.mp4';
-
-  //   await widget.videoFile.copy(outputPath);
-
-  //   final isSuccess =
-  //       await GallerySaver.saveVideo(outputPath, albumName: 'Trimmed Videos');
-
-  //   if (isSuccess != null) {
-  //     if (isSuccess) {
-  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //         content: Text('Video exported successfully!'),
-  //         backgroundColor: Colors.green,
-  //       ));
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //         content: Text('Failed to export video!'),
-  //         backgroundColor: Colors.red,
-  //       ));
-  //     }
-
-  //     setState(() {
-  //       _isExporting = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

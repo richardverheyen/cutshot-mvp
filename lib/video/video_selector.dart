@@ -82,35 +82,4 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
       ],
     );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Column(
-  //     children: [
-  //       ElevatedButton(
-  //         onPressed: _pickVideo,
-  //         child: Text('Pick Video'),
-  //       ),
-  //       if (_videoFile != null &&
-  //           !_isTrimmingComplete) // Conditionally render VideoTrimmerWidget
-  //         VideoTrimmerWidget(
-  //           videoFile: _videoFile!,
-  //           onTrimmingComplete: _onTrimmingComplete,
-  //         ),
-  //       if (_videoFile != null &&
-  //           _isTrimmingComplete) // Display trimmed video file details
-  //         Column(
-  //           children: [
-  //             Text('Title: $_videoTitle'),
-  //             Text('Duration: $_videoDuration'),
-  //             ElevatedButton(
-  //               onPressed: () {
-  //                 // TODO: Save trimmed video file to gallery
-  //               },
-  //               child: Text('Save to Gallery'),
-  //             ),
-  //           ],
-  //         ),
-  //     ],
-  //   );
-  // }
 }
