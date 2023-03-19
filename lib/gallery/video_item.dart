@@ -32,25 +32,7 @@ class VideoItem extends StatelessWidget {
                   child: Image.asset(
                     video.thumbnail,
                     fit: BoxFit.contain,
-                  )
-                  // FutureBuilder<String>(
-                  //   future: StorageService().getThumbnailUrl(video),
-                  //   builder:
-                  //       (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       return Image.network(
-                  //         snapshot.data!,
-                  //         fit: BoxFit.contain,
-                  //       );
-                  //     } else {
-                  //       return Image.network(
-                  //         "https://via.placeholder.com/150",
-                  //         fit: BoxFit.contain,
-                  //       );
-                  //     }
-                  //   },
-                  // ),
-                  ),
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[

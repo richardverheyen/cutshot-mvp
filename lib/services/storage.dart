@@ -2,20 +2,18 @@ import 'dart:io';
 
 import 'package:cutshot/services/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path_provider/path_provider.dart';
 
 class StorageService {
-  final storage = FirebaseStorage.instance;
+  final storageRef = FirebaseStorage.instance.ref();
 
   // Stores the video data in firebase storage
   Future<void> storeVideo(Video video) async {
     // Create a storage reference from our app
-    final storageRef = storage.ref();
 
-    final videoRef = storageRef.child(video.id + "/video");
+    final videoRef = storageRef.child("${video.id}/video");
     File videoFile = File(video.path);
 
-    final thumbnailRef = storageRef.child(video.id + "/thumbnail");
+    final thumbnailRef = storageRef.child("${video.id}/thumbnail");
     File thumbnailFile = File(video.thumbnail);
 
     try {
@@ -31,13 +29,11 @@ class StorageService {
   }
 
   Future<String> getThumbnailUrl(Video video) async {
-    final storageRef = storage.ref();
     final thumbnailRef = storageRef.child('${video.id}/thumbnail');
 
     try {
       final url = await thumbnailRef.getDownloadURL();
       video.thumbnail = url;
-      print('instance of ');
     } on FirebaseException catch (e) {
       print("Error: $e");
     }

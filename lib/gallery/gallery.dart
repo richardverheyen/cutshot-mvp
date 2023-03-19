@@ -90,7 +90,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
             crossAxisCount: 2,
             children: snapshot.data!.docs.map((DocumentSnapshot snapshot) {
               Video data = snapshot.data()! as Video;
-              print(data);
               return VideoItem(video: data);
             }).toList(),
           ),
