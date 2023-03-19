@@ -51,6 +51,9 @@ dependencies:
   json_annotation: ^4.8.0
   intl: ^0.17.0
   firebase_storage: ^11.0.15
+  video_player: ^2.6.0
+  ffmpeg_kit_flutter: ^4.5.0
+  gallery_saver: ^2.3.2
 
 dev_dependencies:
   flutter_test:
