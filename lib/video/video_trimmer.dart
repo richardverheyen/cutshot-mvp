@@ -23,7 +23,7 @@ class VideoTrimmerWidget extends StatefulWidget {
 }
 
 class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
-  late List<File> _tempVideos;
+  late List<Highlight> _tempVideos;
   bool _isTrimming = false;
   bool _isExporting = false;
 
@@ -47,7 +47,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
     List<String> filterStrings = [];
     List<String> exportStrings = [];
-    List<File> outputFiles = [];
+    // List<File> outputFiles = [];
 
     for (Highlight clip in clips) {}
 
@@ -57,21 +57,16 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
       String videoString =
           "[0:v]trim=${clip.start}:${clip.end},setpts=PTS-STARTPTS[v$j];";
-      // print(videoString);
       String audioString =
           "[0:a]atrim=${clip.start}:${clip.end},asetpts=PTS-STARTPTS[a$j];";
-      // print(audioString);
       String concatString =
           "[v$j][a$j]concat=n=1:v=1:a=1[vout$j][aout$j]"; // ; is added below when we join all the filter strings together
-      // print(concatString);
 
       filterStrings.add("$videoString$audioString$concatString");
       exportStrings
           .add("-map [vout$j] -map [aout$j] -strict -2 ${clip.outputPath}");
-      outputFiles.add(File(clip.outputPath));
+      // outputFiles.add(File(clip.outputPath));
     }
-
-    // print("filterStrings: ${filterStrings.join(" ")}");
 
     final arguments = [
       '-y',
@@ -92,7 +87,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
         print('successfully trimmed video {returnCode: $session}}');
         setState(() {
           _isTrimming = false;
-          _tempVideos = outputFiles;
+          _tempVideos = clips;
         });
         // widget.onTrimmingComplete(File(outputPath));
       } else {
@@ -108,7 +103,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
     });
   }
 
-  Future<void> _exportVideos(List<File> exportingVideos) async {
+  Future<void> _exportVideos(List<Highlight> exportingHighlights) async {
     setState(() {
       _isExporting = true;
     });
@@ -123,13 +118,8 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
     final List<bool> results = [];
 
-    for (final video in exportingVideos) {
-      final outputPath =
-          '${appDirectory!.path}/${DateTime.now().millisecondsSinceEpoch}_exported.mp4';
-
-      await video.copy(outputPath);
-
-      final isSuccess = await GallerySaver.saveVideo(outputPath,
+    for (final highlight in exportingHighlights) {
+      final isSuccess = await GallerySaver.saveVideo(highlight.outputPath,
           albumName: 'Cutshot Highlights');
 
       results.add(isSuccess ?? false);
@@ -137,7 +127,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
     if (!results.contains(false)) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('All videos exported successfully!'),
+        content: Text('Highlights saved to Cutshot Hightlights album!'),
         backgroundColor: Colors.green,
       ));
     } else {
