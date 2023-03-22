@@ -6,6 +6,7 @@ import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:cutshot/services/services.dart';
 
 class VideoTrimmerWidget extends StatefulWidget {
   final File videoFile;
@@ -31,35 +32,57 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
       _isTrimming = true;
     });
 
-    final outputPath1 =
-        '${(await getTemporaryDirectory()).path}/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4';
+    final List<Highlight> clips = [
+      Highlight(
+          start: 1,
+          end: 2,
+          outputPath:
+              '${(await getTemporaryDirectory()).path}/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4'),
+      Highlight(
+          start: 3,
+          end: 4,
+          outputPath:
+              '${(await getTemporaryDirectory()).path}/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4'),
+    ];
 
-    final outputPath2 =
-        '${(await getTemporaryDirectory()).path}/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4';
-    final duration =
-        await FFprobeKit.getMediaInformation(widget.videoFile.path);
+    List<String> filterStrings = [];
+    List<String> exportStrings = [];
+    List<File> outputFiles = [];
+
+    for (Highlight clip in clips) {}
+
+    for (int i = 0; i < clips.length; i++) {
+      Highlight clip = clips[i];
+      int j = (i + 1).toInt();
+
+      String videoString =
+          "[0:v]trim=${clip.start}:${clip.end},setpts=PTS-STARTPTS[v$j];";
+      // print(videoString);
+      String audioString =
+          "[0:a]atrim=${clip.start}:${clip.end},asetpts=PTS-STARTPTS[a$j];";
+      // print(audioString);
+      String concatString =
+          "[v$j][a$j]concat=n=1:v=1:a=1[vout$j][aout$j]"; // ; is added below when we join all the filter strings together
+      // print(concatString);
+
+      filterStrings.add("$videoString$audioString$concatString");
+      exportStrings
+          .add("-map [vout$j] -map [aout$j] -strict -2 ${clip.outputPath}");
+      outputFiles.add(File(clip.outputPath));
+    }
+
+    // print("filterStrings: ${filterStrings.join(" ")}");
 
     final arguments = [
       '-y',
       '-i',
       widget.videoFile.path,
       '-filter_complex',
-      '[0:v]trim=1:2,setpts=PTS-STARTPTS[v1];[0:v]trim=3:4,setpts=PTS-STARTPTS[v2];[0:a]atrim=1:2,asetpts=PTS-STARTPTS[a1];[0:a]atrim=3:4,asetpts=PTS-STARTPTS[a2];[v1][a1]concat=n=1:v=1:a=1[vout1][aout1];[v2][a2]concat=n=1:v=1:a=1[vout2][aout2]',
-      '-map',
-      '[vout1]',
-      '-map',
-      '[aout1]',
-      '-strict',
-      '-2',
-      outputPath1,
-      '-map',
-      '[vout2]',
-      '-map',
-      '[aout2]',
-      '-strict',
-      '-2',
-      outputPath2,
+      filterStrings.join(";"),
+      exportStrings.join(" "),
     ];
+
+    print(arguments.join(' '));
 
     // https://pub.dev/documentation/ffmpeg_kit_flutter/latest/ffmpeg_kit/FFmpegKit/executeAsync.html
     await FFmpegKit.executeAsync(arguments.join(' '), (session) async {
@@ -69,7 +92,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
         print('successfully trimmed video {returnCode: $session}}');
         setState(() {
           _isTrimming = false;
-          _tempVideos = [File(outputPath1), File(outputPath2)];
+          _tempVideos = outputFiles;
         });
         // widget.onTrimmingComplete(File(outputPath));
       } else {
@@ -106,8 +129,8 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
       await video.copy(outputPath);
 
-      final isSuccess =
-          await GallerySaver.saveVideo(outputPath, albumName: 'Cutshot Clips');
+      final isSuccess = await GallerySaver.saveVideo(outputPath,
+          albumName: 'Cutshot Highlights');
 
       results.add(isSuccess ?? false);
     }
@@ -128,46 +151,6 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
       _isExporting = false;
     });
   }
-
-  // Future<void> _exportVideos(List<File> exportingVideo) async {
-  //   setState(() {
-  //     _isExporting = true;
-  //   });
-
-  //   late Directory? appDirectory;
-
-  //   if (Platform.isAndroid) {
-  //     appDirectory = await getExternalStorageDirectory()!;
-  //   } else {
-  //     appDirectory = await getApplicationDocumentsDirectory();
-  //   }
-
-  //   final outputPath =
-  //       '${appDirectory!.path}/${DateTime.now().millisecondsSinceEpoch}_exported.mp4';
-
-  //   await exportingVideo.copy(outputPath);
-
-  //   final isSuccess =
-  //       await GallerySaver.saveVideo(outputPath, albumName: 'Cutshot Clips');
-
-  //   if (isSuccess != null) {
-  //     if (isSuccess) {
-  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //         content: Text('Video exported successfully!'),
-  //         backgroundColor: Colors.green,
-  //       ));
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //         content: Text('Failed to export video!'),
-  //         backgroundColor: Colors.red,
-  //       ));
-  //     }
-
-  //     setState(() {
-  //       _isExporting = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

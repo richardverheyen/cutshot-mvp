@@ -1,6 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Video {
+  final String id;
+  final String title;
+  late final String thumbnail;
+  final Timestamp lastModified;
+  final String path;
+  late final bool videoStored;
+  late final bool thumbnailStored;
+
   Video(
       {required this.id,
       required this.title,
@@ -23,14 +31,6 @@ class Video {
               [null, false].contains(json['thumbnailStored']) ? false : true,
         );
 
-  final String id;
-  final String title;
-  late final String thumbnail;
-  final Timestamp lastModified;
-  final String path;
-  late final bool videoStored;
-  late final bool thumbnailStored;
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -40,6 +40,37 @@ class Video {
       'path': path,
       'videoStored': videoStored,
       'thumbnailStored': thumbnailStored,
+    };
+  }
+}
+
+class Highlight {
+  // final String id;
+  final double start;
+  final double end;
+  late String outputPath;
+
+  Highlight(
+      {
+      // required this.id,
+      required this.start,
+      required this.end,
+      this.outputPath = ''});
+
+  Highlight.fromJson(String id, Map<String, dynamic> json)
+      : this(
+          // id: id,
+          start: json['start']! as double,
+          end: json['end']! as double,
+          outputPath: json['outputPath']! as String,
+        );
+
+  Map<String, dynamic> toJson() {
+    return {
+      // 'id': id,
+      'start': start,
+      'end': end,
+      'outputPath': outputPath,
     };
   }
 }
