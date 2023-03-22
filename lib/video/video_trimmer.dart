@@ -5,6 +5,7 @@ import 'package:ffmpeg_kit_flutter/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class VideoTrimmerWidget extends StatefulWidget {
   final File videoFile;
@@ -22,6 +23,7 @@ class VideoTrimmerWidget extends StatefulWidget {
 
 class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
   bool _isTrimming = false;
+  bool _isExporting = false;
 
   Future<void> _trimVideo() async {
     setState(() {
@@ -73,12 +75,59 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
     });
   }
 
+  Future<void> _exportVideo() async {
+    setState(() {
+      _isExporting = true;
+    });
+
+    late Directory? appDirectory;
+
+    if (Platform.isAndroid) {
+      appDirectory = await getExternalStorageDirectory()!;
+    } else {
+      appDirectory = await getApplicationDocumentsDirectory();
+    }
+
+    final outputPath =
+        '${appDirectory!.path}/${DateTime.now().millisecondsSinceEpoch}_exported.mp4';
+
+    await widget.videoFile.copy(outputPath);
+
+    final isSuccess =
+        await GallerySaver.saveVideo(outputPath, albumName: 'Cutshot Clips');
+
+    if (isSuccess != null) {
+      if (isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Video exported successfully!'),
+          backgroundColor: Colors.green,
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Failed to export video!'),
+          backgroundColor: Colors.red,
+        ));
+      }
+
+      setState(() {
+        _isExporting = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        onPressed: _isTrimming ? null : _trimVideo,
-        child: _isTrimming
-            ? const CircularProgressIndicator()
-            : const Text('Trim Video'));
+    return Column(children: [
+      ElevatedButton(
+          onPressed: _isTrimming ? null : _trimVideo,
+          child: _isTrimming
+              ? const CircularProgressIndicator()
+              : const Text('Trim Video')),
+      ElevatedButton(
+          onPressed: _isExporting ? null : _exportVideo,
+          child: _isExporting
+              ? const CircularProgressIndicator()
+              : const Text('Export Video'))
+    ]);
   }
 }

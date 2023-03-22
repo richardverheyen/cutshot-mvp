@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
-import 'video_trimmer.dart'; // Import the VideoTrimmerWidget
-import 'video_exporter.dart'; // Import the VideoTrimmerWidget
+import 'video_trimmer.dart';
 
 class VideoSelectorWidget extends StatefulWidget {
   const VideoSelectorWidget({Key? key}) : super(key: key);
@@ -16,8 +15,7 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
   final ImagePicker _picker = ImagePicker();
   File? _videoFile;
   late VideoPlayerController _controller;
-  bool _isTrimmingComplete =
-      false; // State variable to track if trimming process is complete
+  bool _isTrimmingComplete = false;
 
   Future<void> _pickVideo() async {
     final pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
@@ -50,11 +48,6 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
             videoFile: _videoFile!,
             onTrimmingComplete: _onTrimmingComplete,
           ),
-        if (_videoFile != null &&
-            _isTrimmingComplete) // Display trimmed video file details
-          VideoExporterWidget(
-            videoFile: _videoFile!,
-          )
       ],
     );
   }
