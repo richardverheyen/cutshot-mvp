@@ -16,8 +16,6 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
   final ImagePicker _picker = ImagePicker();
   File? _videoFile;
   late VideoPlayerController _controller;
-  String _videoTitle = '';
-  String _videoDuration = '';
   bool _isTrimmingComplete =
       false; // State variable to track if trimming process is complete
 
@@ -26,10 +24,6 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
     if (pickedFile != null) {
       _videoFile = File(pickedFile.path);
       _controller = VideoPlayerController.file(_videoFile!);
-      _videoTitle = _videoFile!.path.split('/').last;
-      final duration = _controller.value.duration;
-      _videoDuration =
-          '${duration.inMinutes.remainder(60)}:${duration.inSeconds.remainder(60)}';
       setState(() {});
     }
   }
@@ -40,10 +34,6 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
     setState(() {
       _isTrimmingComplete = true;
       _videoFile = trimmedVideoFile;
-      _videoTitle = trimmedVideoFile.path.split('/').last;
-      final duration = _controller.value.duration;
-      _videoDuration =
-          '${duration.inMinutes.remainder(60)}:${duration.inSeconds.remainder(60)}';
     });
   }
 
@@ -53,32 +43,18 @@ class _VideoSelectorWidgetState extends State<VideoSelectorWidget> {
       children: [
         ElevatedButton(
           onPressed: _pickVideo,
-          child: Text('Pick Video'),
+          child: const Text('Pick Video'),
         ),
-        if (_videoFile != null &&
-            !_isTrimmingComplete) // Conditionally render VideoTrimmerWidget
+        if (_videoFile != null) // Conditionally render VideoTrimmerWidget
           VideoTrimmerWidget(
             videoFile: _videoFile!,
             onTrimmingComplete: _onTrimmingComplete,
           ),
         if (_videoFile != null &&
             _isTrimmingComplete) // Display trimmed video file details
-          Column(
-            children: [
-              Text('Title: $_videoTitle'),
-              Text('Duration: $_videoDuration'),
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Save trimmed video file to gallery
-                },
-                child: Text('Save to Gallery'),
-              ),
-              SizedBox(height: 16),
-              VideoExporterWidget(
-                videoFile: _videoFile!,
-              ),
-            ],
-          ),
+          VideoExporterWidget(
+            videoFile: _videoFile!,
+          )
       ],
     );
   }

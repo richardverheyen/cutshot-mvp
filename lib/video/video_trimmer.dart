@@ -33,7 +33,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
     final duration =
         await FFprobeKit.getMediaInformation(widget.videoFile.path);
     final startTime = 0;
-    final endTime = startTime + 10;
+    final endTime = startTime + 4;
 
     final arguments = [
       '-y',
@@ -75,19 +75,10 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (_isTrimming)
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(),
-          )
-        else
-          ElevatedButton(
-            onPressed: _trimVideo,
-            child: const Text('Trim Video'),
-          ),
-      ],
-    );
+    return ElevatedButton(
+        onPressed: _isTrimming ? null : _trimVideo,
+        child: _isTrimming
+            ? const CircularProgressIndicator()
+            : const Text('Trim Video'));
   }
 }

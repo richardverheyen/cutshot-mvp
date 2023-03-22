@@ -59,19 +59,10 @@ class _VideoExporterWidgetState extends State<VideoExporterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (_isExporting)
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(),
-          )
-        else
-          ElevatedButton(
-            onPressed: _exportVideo,
-            child: const Text('Export Video'),
-          ),
-      ],
-    );
+    return ElevatedButton(
+        onPressed: _exportVideo,
+        child: _isExporting
+            ? const CircularProgressIndicator()
+            : const Text('Export Video'));
   }
 }
