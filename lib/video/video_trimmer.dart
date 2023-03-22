@@ -22,6 +22,7 @@ class VideoTrimmerWidget extends StatefulWidget {
 }
 
 class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
+  late File _tempVideo;
   bool _isTrimming = false;
   bool _isExporting = false;
 
@@ -60,8 +61,9 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
         print('successfully trimmed video {returnCode: $session}}');
         setState(() {
           _isTrimming = false;
+          _tempVideo = File(outputPath);
         });
-        widget.onTrimmingComplete(File(outputPath));
+        // widget.onTrimmingComplete(File(outputPath));
       } else {
         print('failed to trim video {returnCode: $session}');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -75,7 +77,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
     });
   }
 
-  Future<void> _exportVideo() async {
+  Future<void> _exportVideo(File exportingVideo) async {
     setState(() {
       _isExporting = true;
     });
@@ -91,7 +93,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
     final outputPath =
         '${appDirectory!.path}/${DateTime.now().millisecondsSinceEpoch}_exported.mp4';
 
-    await widget.videoFile.copy(outputPath);
+    await exportingVideo.copy(outputPath);
 
     final isSuccess =
         await GallerySaver.saveVideo(outputPath, albumName: 'Cutshot Clips');
@@ -124,7 +126,7 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
               ? const CircularProgressIndicator()
               : const Text('Trim Video')),
       ElevatedButton(
-          onPressed: _isExporting ? null : _exportVideo,
+          onPressed: _isExporting ? null : () => _exportVideo(_tempVideo),
           child: _isExporting
               ? const CircularProgressIndicator()
               : const Text('Export Video'))
