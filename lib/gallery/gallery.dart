@@ -85,9 +85,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
           body: GridView.count(
             primary: false,
-            padding: const EdgeInsets.all(4.0),
-            crossAxisSpacing: 4.0,
-            crossAxisCount: 2,
+            crossAxisCount: 3,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
             children: snapshot.data!.docs.map((DocumentSnapshot snapshot) {
               Video data = snapshot.data()! as Video;
               return VideoItem(video: data);

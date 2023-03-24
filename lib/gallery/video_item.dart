@@ -11,47 +11,77 @@ class VideoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: video.path,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => VideoScreen(video: video),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => VideoScreen(video: video),
+            ),
+          );
+        },
+        child: Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Image.asset(
+                video.thumbnail,
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
               ),
-            );
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                  flex: 3,
-                  child: Image.asset(
-                    video.thumbnail,
-                    fit: BoxFit.contain,
-                  )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    DateFormat('d/MMM/yy').format(video.lastModified.toDate()),
-                    style: const TextStyle(
-                      height: 1.5,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(0.0),
+                    Colors.white.withOpacity(0.5),
+                  ],
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(width: 4),
+                      Text(
+                        DateFormat('d/MMM').format(
+                          video.lastModified.toDate(),
+                        ),
+                        style: const TextStyle(
+                          height: 1.5,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  video.videoStored
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.cloud_off),
-                  const SizedBox(width: 8)
+                  Row(
+                    children: [
+                      Icon(
+                        video.videoStored
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        video.videoStored
+                            ? Icons.cloud_done_outlined
+                            : Icons.cloud_off,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 4),
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
