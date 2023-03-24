@@ -82,62 +82,62 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.video.title),
+      appBar: AppBar(
+        title: Text(widget.video.title),
+      ),
+      // body: const VideoSelectorWidget()
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.black,
+              child: Stack(
+                children: [
+                  Center(
+                    child: Hero(
+                        tag: widget.video.path,
+                        child: Image.asset(
+                          widget.video.thumbnail,
+                          fit: BoxFit.contain,
+                        )),
+                  ),
+                  Center(
+                    heightFactor: 5.5,
+                    child: StreamBuilder<double>(
+                      stream: _progressController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          _progress = snapshot.data!;
+                        }
+                        return CircularProgressIndicator(
+                            backgroundColor: Colors.grey.shade400,
+                            value: _progress / 100);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                        ),
+                        onPressed:
+                            widget.video.videoStored ? null : _uploadVideo,
+                        child: Text(widget.video.videoStored
+                            ? 'Video Stored!'
+                            : 'Upload Video')))),
+            // const VideoSelectorWidget()
+          ],
         ),
-        body: const VideoSelectorWidget()
-        // body: Center(
-        //   child: Column(
-        //     children: [
-        //       Container(
-        //         color: Colors.black,
-        //         child: Stack(
-        //           children: [
-        //             Center(
-        //               child: Hero(
-        //                   tag: widget.video.path,
-        //                   child: Image.asset(
-        //                     widget.video.thumbnail,
-        //                     fit: BoxFit.contain,
-        //                   )),
-        //             ),
-        //             Center(
-        //               heightFactor: 5.5,
-        //               child: StreamBuilder<double>(
-        //                 stream: _progressController.stream,
-        //                 builder: (context, snapshot) {
-        //                   if (snapshot.hasData) {
-        //                     _progress = snapshot.data!;
-        //                   }
-        //                   return CircularProgressIndicator(
-        //                       backgroundColor: Colors.grey.shade400,
-        //                       value: _progress / 100);
-        //                 },
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //       Padding(
-        //           padding:
-        //               const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-        //           child: SizedBox(
-        //               width: double.infinity,
-        //               child: FilledButton(
-        //                   style: FilledButton.styleFrom(
-        //                     shape: RoundedRectangleBorder(
-        //                       borderRadius: BorderRadius.circular(4.0),
-        //                     ),
-        //                   ),
-        //                   onPressed:
-        //                       widget.video.videoStored ? null : _uploadVideo,
-        //                   child: Text(widget.video.videoStored
-        //                       ? 'Video Stored!'
-        //                       : 'Upload Video')))),
-        //       // const VideoSelectorWidget()
-        //     ],
-        //   ),
-        // ),
-        );
+      ),
+    );
   }
 }
