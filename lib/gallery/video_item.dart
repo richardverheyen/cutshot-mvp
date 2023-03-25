@@ -2,6 +2,7 @@ import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
 import 'package:cutshot/services/models.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class VideoItem extends StatelessWidget {
   final Video video;
@@ -24,14 +25,21 @@ class VideoItem extends StatelessWidget {
             alignment: Alignment.bottomRight,
             children: [
               SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Image.asset(
-                  video.thumbnail,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
-              ),
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: FutureBuilder(
+                      future: getApplicationDocumentsDirectory(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Image.asset(
+                            video.thumbnail,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      })),
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(

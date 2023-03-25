@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:cutshot/theme.dart';
 import 'package:cutshot/shared/shared.dart';
-// import 'package:cutshot/services/services.dart';
 import 'package:cutshot/home/home.dart';
 
 import 'firebase_options.dart';

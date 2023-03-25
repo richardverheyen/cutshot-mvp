@@ -118,6 +118,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 ],
               ),
             ),
+            Text(widget.video.path),
             Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),

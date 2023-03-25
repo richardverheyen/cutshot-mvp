@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Video {
   final String id;
   final String title;
-  late final String thumbnail;
+  String thumbnail;
   final Timestamp lastModified;
   final String path;
   late final bool videoStored;
@@ -16,7 +17,15 @@ class Video {
       required this.thumbnail,
       this.videoStored = false,
       this.thumbnailStored = false,
-      required this.path});
+      required this.path}) {
+    _initPaths(thumbnail);
+  }
+
+  void _initPaths(String? thumbnail) async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final appDocPath = appDocDir.path;
+    this.thumbnail = "$appDocPath/$thumbnail";
+  }
 
   Video.fromJson(String id, Map<String, dynamic> json)
       : this(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cutshot/profile/profile.dart';
 import 'package:cutshot/video/video.dart';
@@ -31,24 +33,40 @@ class _GalleryScreenState extends State<GalleryScreen> {
       .snapshots();
 
   Future<void> _addVideoToFirebase() async {
+    // final directory = await getApplicationDocumentsDirectory();
+    // final files = directory.listSync();
+
+    // for (final file in files) {
+    //   print(file.path);
+    // }
+
+    // final Directory appDir = await getApplicationDocumentsDirectory();
+    // final String appDirPath = appDir.path;
+    // print(appDirPath);
+
     final XFile? videoXFile = await _picker.pickVideo(
         source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
 
-    final temporaryFilePath = await VideoThumbnail.thumbnailFile(
-      video: videoXFile!.path,
-      thumbnailPath: (await getTemporaryDirectory()).path,
+    // perm directory
+    final Directory appDir = await getApplicationDocumentsDirectory();
+    final String appDirPath = appDir.path;
+    final videoPermFile =
+        await File(videoXFile!.path).copy('$appDirPath/${videoXFile.name}');
+    await videoPermFile.writeAsBytes(await videoXFile.readAsBytes());
+
+    final thumbnailPath = await VideoThumbnail.thumbnailFile(
+      video: videoPermFile.path,
       imageFormat: ImageFormat.WEBP,
-      maxHeight:
-          200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-      quality: 90,
+      maxWidth: 0,
+      maxHeight: 0,
     );
 
     //get first frame of video as thumbnail
     final Map<String, dynamic> json = {
-      'path': videoXFile.path,
-      'thumbnail': temporaryFilePath,
+      'path': videoPermFile.path.split('/').last,
+      'thumbnail': thumbnailPath!.split('/').last,
       'lastModified': await videoXFile.lastModified(),
-      'title': videoXFile.name,
+      'title': "",
     };
 
     FirestoreService().createVideo(json);
