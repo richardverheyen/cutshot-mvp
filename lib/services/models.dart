@@ -4,20 +4,24 @@ import 'package:path_provider/path_provider.dart';
 class Video {
   final String id;
   final String title;
+  DateTime? createdDate;
   String thumbnail;
-  final Timestamp lastModified;
+  late final bool thumbnailStored;
   final String path;
   late final bool videoStored;
-  late final bool thumbnailStored;
+  double uploadProgress;
+  bool uploading;
 
   Video(
-      {required this.id,
-      required this.title,
-      required this.lastModified,
-      required this.thumbnail,
+      {this.id = '',
+      this.title = '',
+      this.createdDate,
+      this.thumbnail = '',
       this.videoStored = false,
       this.thumbnailStored = false,
-      required this.path}) {
+      this.path = '',
+      this.uploadProgress = 0,
+      this.uploading = false}) {
     _initPaths(thumbnail);
   }
 
@@ -32,12 +36,14 @@ class Video {
           id: id,
           title: json['title']! as String,
           thumbnail: json['thumbnail']! as String,
-          lastModified: json['lastModified']! as Timestamp,
+          createdDate: json['createdDate']!.toDate() as DateTime,
           path: json['path']! as String,
           videoStored:
               [null, false].contains(json['videoStored']) ? false : true,
           thumbnailStored:
               [null, false].contains(json['thumbnailStored']) ? false : true,
+          uploadProgress: json['uploadProgress'].toDouble() as double,
+          uploading: [null, false].contains(json['uploading']) ? false : true,
         );
 
   Map<String, dynamic> toJson() {
@@ -45,10 +51,12 @@ class Video {
       'id': id,
       'title': title,
       'thumbnail': thumbnail,
-      'lastModified': lastModified,
+      'createdDate': Timestamp.fromDate(createdDate!),
       'path': path,
       'videoStored': videoStored,
       'thumbnailStored': thumbnailStored,
+      'uploadProgress': uploadProgress,
+      'uploading': uploading,
     };
   }
 }

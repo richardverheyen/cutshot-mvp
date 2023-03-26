@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:cutshot/theme.dart';
 import 'package:cutshot/shared/shared.dart';
 import 'package:cutshot/home/home.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
+import 'services/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,17 +41,15 @@ class _AppState extends State<App> {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           // https://fireship.io/courses/flutter-firebase/topics-stream-provider/
-          // return StreamProvider(
-          //   create: (_) => FirestoreService().streamReport(),
-          //   catchError: (_, err) => Report(),
-          //   initialData: Report(),
-          //   child:
-          return MaterialApp(
-              debugShowCheckedModeBanner: true,
-              // routes: appRoutes,
-              home: const HomeScreen(),
-              theme: appTheme);
-          // );
+          return StreamProvider(
+              create: (_) => FirestoreService().streamVideos(),
+              catchError: (_, err) => null,
+              initialData: null,
+              child: MaterialApp(
+                  debugShowCheckedModeBanner: true,
+                  // routes: appRoutes,
+                  home: const HomeScreen(),
+                  theme: appTheme));
         }
 
         // Otherwise, show something whilst waiting for initialization to complete

@@ -25,6 +25,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   final _videosStream = FirebaseFirestore.instance
       .collection('videos')
+      .orderBy('createdDate', descending: false)
       .withConverter<Video>(
         fromFirestore: (snapshot, _) =>
             Video.fromJson(snapshot.id, snapshot.data()!),
@@ -33,17 +34,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
       .snapshots();
 
   Future<void> _addVideoToFirebase() async {
-    // final directory = await getApplicationDocumentsDirectory();
-    // final files = directory.listSync();
-
-    // for (final file in files) {
-    //   print(file.path);
-    // }
-
-    // final Directory appDir = await getApplicationDocumentsDirectory();
-    // final String appDirPath = appDir.path;
-    // print(appDirPath);
-
     final XFile? videoXFile = await _picker.pickVideo(
         source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
 
@@ -62,14 +52,21 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
 
     //get first frame of video as thumbnail
-    final Map<String, dynamic> json = {
-      'path': videoPermFile.path.split('/').last,
-      'thumbnail': thumbnailPath!.split('/').last,
-      'lastModified': await videoXFile.lastModified(),
-      'title': "",
-    };
+    // final Map<String, dynamic> json = {
+    //   'path': videoPermFile.path.split('/').last,
+    //   'thumbnail': thumbnailPath!.split('/').last,
+    //   'createdDate': await videoXFile.lastModified(),
+    //   'title': "",
+    // };
 
-    FirestoreService().createVideo(json);
+    Video video = Video(
+        id: '',
+        path: videoPermFile.path.split('/').last,
+        thumbnail: thumbnailPath!.split('/').last,
+        createdDate: await videoXFile.lastModified(),
+        title: "");
+
+    FirestoreService().createVideo(video);
   }
 
   @override
