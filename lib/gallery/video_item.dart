@@ -3,38 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:cutshot/services/models.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../services/services.dart';
 
-class VideoItem extends StatefulWidget {
-  final Video video;
+class VideoItem extends StatelessWidget {
   const VideoItem({super.key, required this.video});
 
-  @override
-  State<VideoItem> createState() => _VideoItemState();
-}
-
-class _VideoItemState extends State<VideoItem> {
-  @override
-  void initState() {
-    super.initState();
-
-    if (!widget.video.videoStored) {
-      FirestoreService().uploadVideo(widget.video);
-    }
-  }
+  final Video video;
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: widget.video.path,
+      tag: video.path,
       child: Material(
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    VideoScreen(video: widget.video),
+                builder: (BuildContext context) => VideoScreen(video: video),
               ),
             );
           },
@@ -49,7 +34,7 @@ class _VideoItemState extends State<VideoItem> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           return Image.asset(
-                            widget.video.thumbnail,
+                            video.thumbnail,
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                           );
@@ -77,7 +62,7 @@ class _VideoItemState extends State<VideoItem> {
                         const SizedBox(width: 4),
                         Text(
                           DateFormat('d/MMM').format(
-                            widget.video.createdDate!,
+                            video.createdDate ?? DateTime.now(),
                           ),
                           style: const TextStyle(
                             height: 1.5,
@@ -90,17 +75,17 @@ class _VideoItemState extends State<VideoItem> {
                     Row(
                       children: [
                         Icon(
-                          widget.video.videoStored
+                          video.videoStored
                               ? Icons.visibility
                               : Icons.visibility_off,
                           size: 18,
                         ),
                         const SizedBox(width: 4),
                         Icon(
-                          widget.video.videoStored
+                          video.videoStored
                               ? Icons.cloud_done_outlined
                               : Icons.cloud_off,
-                          color: widget.video.videoStored
+                          color: video.videoStored
                               ? Colors.greenAccent.shade400
                               : Colors.black,
                           size: 18,
@@ -111,14 +96,14 @@ class _VideoItemState extends State<VideoItem> {
                   ],
                 ),
               ),
-              widget.video.uploading
+              video.uploading
                   ? SizedBox(
                       width: double.infinity,
                       height: double.infinity,
                       child: Center(
                         child: CircularProgressIndicator(
                             backgroundColor: Colors.grey.shade400,
-                            value: widget.video.uploadProgress / 100),
+                            value: video.uploadProgress / 100),
                       ))
                   : const SizedBox(),
             ],

@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cutshot/theme.dart';
@@ -38,21 +37,13 @@ class _AppState extends State<App> {
           // Error screen
         }
 
-        // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          // https://fireship.io/courses/flutter-firebase/topics-stream-provider/
-          return StreamProvider(
-              create: (_) => FirestoreService().streamVideos(),
-              catchError: (_, err) => null,
-              initialData: null,
-              child: MaterialApp(
-                  debugShowCheckedModeBanner: true,
-                  // routes: appRoutes,
-                  home: const HomeScreen(),
-                  theme: appTheme));
+          return MaterialApp(
+              debugShowCheckedModeBanner: true,
+              home: const HomeScreen(),
+              theme: appTheme);
         }
 
-        // Otherwise, show something whilst waiting for initialization to complete
         return const MaterialApp(home: LoadingScreen());
       },
     );

@@ -10,16 +10,14 @@ import 'storage.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot> streamVideos() {
+  Stream<List<Video>> streamVideoList() {
     return _db
         .collection('videos')
         .orderBy('createdDate', descending: false)
-        .withConverter<Video>(
-          fromFirestore: (snapshot, _) =>
-              Video.fromJson(snapshot.id, snapshot.data()!),
-          toFirestore: (movie, _) => movie.toJson(),
-        )
-        .snapshots();
+        .snapshots()
+        .map((snapShot) => snapShot.docs
+            .map((doc) => Video.fromJson(doc.id, doc.data()))
+            .toList());
   }
 
   /// Updates the current user's report document after completing quiz
@@ -28,12 +26,23 @@ class FirestoreService {
 
     videos
         .add(video.toJson())
-        .then((value) => print("Video Added"))
+        .then((data) => _db
+            .collection('videos')
+            .doc(data.id)
+            .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  Video.fromJson(snapshot.id, snapshot.data()!),
+              toFirestore: (Video video, _) => video.toJson(),
+            )
+            .get())
+        .then((doc) => doc.data())
+        .then((newVideo) => uploadVideo(newVideo as Video))
+        .then((_) => print("Video uploaded!"))
         .catchError((error) => print("Failed to add video: $error"));
   }
 
   Future<void> uploadVideo(Video video) async {
-    print("Upload teh video!");
+    // print("Upload teh video!");
 
     final appDocDir = await getApplicationDocumentsDirectory();
     final appDocPath = appDocDir.path;
