@@ -20,8 +20,19 @@ class FirestoreService {
             .toList());
   }
 
+  inferVideo(String id) async {
+    _db.collection('videos').doc(id).collection('highlights').add({
+      "start": 1,
+      "end": 2,
+    });
+    _db.collection('videos').doc(id).collection('highlights').add({
+      "start": 3,
+      "end": 4,
+    });
+  }
+
   /// Updates the current user's report document after completing quiz
-  Future<void> createVideo(Video video) async {
+  createVideo(Video video) async {
     _db
         .collection('videos')
         .add(video.toJson())
@@ -41,7 +52,7 @@ class FirestoreService {
         .catchError((error) => print("Failed to add video: $error"));
   }
 
-  Future<void> uploadVideo(Video video) async {
+  uploadVideo(Video video) async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final appDocPath = appDocDir.path;
 

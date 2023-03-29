@@ -136,19 +136,20 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // final dir = Provider.of<Directory>(context).path;
-
     return Column(children: [
-      ElevatedButton(
-          onPressed: _isTrimming ? null : _trimVideo,
-          child: _isTrimming
-              ? const CircularProgressIndicator()
-              : const Text('Trim Video')),
-      ElevatedButton(
-          onPressed: _isExporting ? null : () => _exportVideos(_tempVideos),
-          child: _isExporting
-              ? const CircularProgressIndicator()
-              : const Text('Export Video'))
+      widget.sourceVideo.uploadProgress != 100
+          ? const Text("Uploading video...")
+          : const Text("No Highlights found")
+      // ElevatedButton(
+      //     onPressed: _isTrimming ? null : _trimVideo,
+      //     child: _isTrimming
+      //         ? const CircularProgressIndicator()
+      //         : const Text('Trim Video')),
+      // ElevatedButton(
+      //     onPressed: _isExporting ? null : () => _exportVideos(_tempVideos),
+      //     child: _isExporting
+      //         ? const CircularProgressIndicator()
+      //         : const Text('Export Video'))
     ]);
   }
 }

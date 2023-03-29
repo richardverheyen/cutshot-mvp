@@ -13,7 +13,7 @@ class VideoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: video.thumbnailPath,
+      tag: video.id,
       child: Material(
         child: InkWell(
           onTap: () {
@@ -22,7 +22,7 @@ class VideoItem extends StatelessWidget {
                   // Figure out how to do routing correctly
                   builder: (BuildContext context) => MultiProvider(providers: [
                         StreamProvider<List<Video>>(initialData: [
-                          Video()
+                          video
                         ], create: (_) => FirestoreService().streamVideoList()),
                       ], child: VideoScreen(id: video.id))),
 
