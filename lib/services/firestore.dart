@@ -22,10 +22,10 @@ class FirestoreService {
 
   /// Updates the current user's report document after completing quiz
   Future<void> createVideo(Video video) async {
-    CollectionReference videos = _db.collection('videos');
-
-    videos
+    _db
+        .collection('videos')
         .add(video.toJson())
+        // Then start the uploadVideo process
         .then((data) => _db
             .collection('videos')
             .doc(data.id)
@@ -42,34 +42,31 @@ class FirestoreService {
   }
 
   Future<void> uploadVideo(Video video) async {
-    // print("Upload teh video!");
-
     final appDocDir = await getApplicationDocumentsDirectory();
     final appDocPath = appDocDir.path;
 
     late UploadTask uploadVideoTask;
 
-    CollectionReference videos = _db.collection('videos');
-
-    final videoRef = StorageService().storageRef.child("${video.id}/video");
-    final thumbnailRef =
-        StorageService().storageRef.child("${video.id}/thumbnail");
-
     File videoFile = File("$appDocPath/${video.videoPath}");
     File thumbnailFile = File(video.thumbnailPath);
 
     // Upload thumbnail but don't track progress
-    thumbnailRef.putFile(
-        thumbnailFile, SettableMetadata(contentType: "image/webp"));
-    uploadVideoTask =
-        videoRef.putFile(videoFile, SettableMetadata(contentType: "video/mp4"));
+    StorageService()
+        .storageRef
+        .child("${video.id}/thumbnail")
+        .putFile(thumbnailFile, SettableMetadata(contentType: "image/webp"));
+
+    uploadVideoTask = StorageService()
+        .storageRef
+        .child("${video.id}/video")
+        .putFile(videoFile, SettableMetadata(contentType: "video/mp4"));
 
     uploadVideoTask.snapshotEvents.listen((TaskSnapshot snapshot) {
       switch (snapshot.state) {
         case TaskState.running:
           final double progress =
               snapshot.bytesTransferred / snapshot.totalBytes * 100;
-          videos.doc(video.id).update({
+          _db.collection('videos').doc(video.id).update({
             'uploading': true,
             'uploadProgress': progress,
           });
@@ -86,7 +83,7 @@ class FirestoreService {
           break;
 
         case TaskState.success:
-          videos.doc(video.id).update({
+          _db.collection('videos').doc(video.id).update({
             'uploading': false,
           });
           break;

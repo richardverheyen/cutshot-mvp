@@ -6,30 +6,40 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class VideoScreen extends StatefulWidget {
-  final Video video;
+// class VideoScreen extends StatefulWidget {
+//   final String id;
 
-  const VideoScreen({super.key, required this.video});
+//   const VideoScreen({super.key, required this.video});
 
-  @override
-  State<VideoScreen> createState() => _VideoScreenState();
-}
+//   @override
+//   State<VideoScreen> createState() => _VideoScreenState();
+// }
 
-class _VideoScreenState extends State<VideoScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
+// class MyWidget extends StatelessWidget {
+//   const MyWidget({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }
+
+class VideoScreen extends StatelessWidget {
+  const VideoScreen({super.key, required this.id});
+
+  final String id;
 
   @override
   Widget build(BuildContext context) {
-    final dir = Provider.of<Directory>(context).path;
+    final List<Video> videos = Provider.of<List<Video>>(context);
+    final Video video = videos.firstWhere((Video video) => video.id == id,
+        orElse: () => Video());
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.video.title),
+        title: Text(video.title),
         actions: [
-          widget.video.videoStored
+          video.videoStored
               ? Container()
               : IconButton(
                   icon: const Icon(
@@ -37,7 +47,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   ),
                   // ignore: avoid_returning_null_for_void
                   onPressed: () => null),
-          widget.video.videoStored
+          video.videoStored
               ? IconButton(
                   icon: const Icon(
                     FontAwesomeIcons.scissors,
@@ -65,9 +75,9 @@ class _VideoScreenState extends State<VideoScreen> {
                 children: [
                   Center(
                     child: Hero(
-                        tag: widget.video.thumbnailPath,
+                        tag: video.thumbnailPath,
                         child: Image.asset(
-                          widget.video.thumbnailPath,
+                          video.thumbnailPath,
                           fit: BoxFit.contain,
                         )),
                   ),
@@ -75,28 +85,13 @@ class _VideoScreenState extends State<VideoScreen> {
                       heightFactor: 240,
                       child: CircularProgressIndicator(
                           backgroundColor: Colors.grey.shade400,
-                          value: widget.video.uploadProgress / 100)),
+                          value: video.uploadProgress / 100)),
                 ],
               ),
             ),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-                child: SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                        ),
-                        onPressed: widget.video.videoStored ? null : null,
-                        child: Text(widget.video.videoStored
-                            ? 'Video Stored!'
-                            : 'Upload Video')))),
             VideoTrimmerWidget(
-              videoFile: File("$dir/${widget.video.videoPath}"),
-              onTrimmingComplete: (File file) => {},
+              sourceVideo: video,
+              onTrimmingComplete: (Video video) => {},
             ),
           ],
         ),

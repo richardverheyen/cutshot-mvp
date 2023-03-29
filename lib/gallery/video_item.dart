@@ -1,9 +1,9 @@
 import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
-import 'package:cutshot/services/models.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cutshot/services/services.dart';
+import 'package:provider/provider.dart';
 
 class VideoItem extends StatelessWidget {
   const VideoItem({super.key, required this.video});
@@ -19,8 +19,14 @@ class VideoItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => VideoScreen(video: video),
-              ),
+                  // Figure out how to do routing correctly
+                  builder: (BuildContext context) => MultiProvider(providers: [
+                        StreamProvider<List<Video>>(initialData: [
+                          Video()
+                        ], create: (_) => FirestoreService().streamVideoList()),
+                      ], child: VideoScreen(id: video.id))),
+
+              // VideoScreen(id: video.id),
             );
           },
           child: Stack(

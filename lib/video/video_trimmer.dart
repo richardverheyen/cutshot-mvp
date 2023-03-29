@@ -6,14 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:cutshot/services/services.dart';
+import 'package:provider/provider.dart';
 
 class VideoTrimmerWidget extends StatefulWidget {
-  final File videoFile;
-  final ValueChanged<File> onTrimmingComplete;
+  final Video sourceVideo;
+  final ValueChanged<Video> onTrimmingComplete;
 
   const VideoTrimmerWidget({
     Key? key,
-    required this.videoFile,
+    required this.sourceVideo,
     required this.onTrimmingComplete,
   }) : super(key: key);
 
@@ -31,24 +32,25 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
       _isTrimming = true;
     });
 
+    String tempDir = await getTemporaryDirectory().then((dir) => dir.path);
+    String dir =
+        await getApplicationDocumentsDirectory().then((dir) => dir.path);
+
     final List<Highlight> clips = [
       Highlight(
           start: 1,
           end: 2,
           outputPath:
-              '${(await getTemporaryDirectory()).path}/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4'),
+              '$tempDir/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4'),
       Highlight(
           start: 3,
           end: 4,
           outputPath:
-              '${(await getTemporaryDirectory()).path}/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4'),
+              '$tempDir/${DateTime.now().millisecondsSinceEpoch}_trimmed.mp4'),
     ];
 
     List<String> filterStrings = [];
     List<String> exportStrings = [];
-    // List<File> outputFiles = [];
-
-    for (Highlight clip in clips) {}
 
     for (int i = 0; i < clips.length; i++) {
       Highlight clip = clips[i];
@@ -64,13 +66,12 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
       filterStrings.add("$videoString$audioString$concatString");
       exportStrings
           .add("-map [vout$j] -map [aout$j] -strict -2 ${clip.outputPath}");
-      // outputFiles.add(File(clip.outputPath));
     }
 
     final arguments = [
       '-y',
       '-i',
-      widget.videoFile.path,
+      "$dir/${widget.sourceVideo.videoPath}",
       '-filter_complex',
       filterStrings.join(";"),
       exportStrings.join(" "),
@@ -107,14 +108,6 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
       _isExporting = true;
     });
 
-    late Directory? appDirectory;
-
-    if (Platform.isAndroid) {
-      appDirectory = await getExternalStorageDirectory()!;
-    } else {
-      appDirectory = await getApplicationDocumentsDirectory();
-    }
-
     final List<bool> results = [];
 
     for (final highlight in exportingHighlights) {
@@ -143,6 +136,8 @@ class _VideoTrimmerWidgetState extends State<VideoTrimmerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // final dir = Provider.of<Directory>(context).path;
+
     return Column(children: [
       ElevatedButton(
           onPressed: _isTrimming ? null : _trimVideo,

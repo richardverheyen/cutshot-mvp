@@ -51,11 +51,6 @@ class _AppState extends State<App> {
                   debugShowCheckedModeBanner: true,
                   home: const HomeScreen(),
                   theme: appTheme));
-
-          // return MaterialApp(
-          //     debugShowCheckedModeBanner: true,
-          //     home: const HomeScreen(),
-          //     theme: appTheme);
         }
 
         return const MaterialApp(home: LoadingScreen());
