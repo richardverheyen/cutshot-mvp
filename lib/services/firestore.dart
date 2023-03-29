@@ -55,8 +55,8 @@ class FirestoreService {
     final thumbnailRef =
         StorageService().storageRef.child("${video.id}/thumbnail");
 
-    File videoFile = File("$appDocPath/${video.path}");
-    File thumbnailFile = File(video.thumbnail);
+    File videoFile = File("$appDocPath/${video.videoPath}");
+    File thumbnailFile = File(video.thumbnailPath);
 
     // Upload thumbnail but don't track progress
     thumbnailRef.putFile(

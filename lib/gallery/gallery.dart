@@ -41,8 +41,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     Video video = Video(
         id: '',
-        path: videoPermFile.path.split('/').last,
-        thumbnail: thumbnailPath!.split('/').last,
+        videoPath: videoPermFile.path,
+        thumbnailPath: thumbnailPath!,
         createdDate: await videoXFile.lastModified(),
         title: "");
 

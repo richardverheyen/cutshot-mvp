@@ -11,10 +11,10 @@ class StorageService {
     // Create a storage reference from our app
 
     final videoRef = storageRef.child("${video.id}/video");
-    File videoFile = File(video.path);
+    File videoFile = File(video.videoPath);
 
     final thumbnailRef = storageRef.child("${video.id}/thumbnail");
-    File thumbnailFile = File(video.thumbnail);
+    File thumbnailFile = File(video.thumbnailPath);
 
     try {
       print("uploading video...");
@@ -33,11 +33,11 @@ class StorageService {
 
     try {
       final url = await thumbnailRef.getDownloadURL();
-      video.thumbnail = url;
+      video.thumbnailPath = url;
     } on FirebaseException catch (e) {
       print("Error: $e");
     }
 
-    return video.thumbnail;
+    return video.thumbnailPath;
   }
 }

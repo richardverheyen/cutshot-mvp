@@ -13,7 +13,7 @@ class VideoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: video.path,
+      tag: video.thumbnailPath,
       child: Material(
         child: InkWell(
           onTap: () {
@@ -34,7 +34,7 @@ class VideoItem extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           return Image.asset(
-                            video.thumbnail,
+                            video.thumbnailPath,
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                           );
