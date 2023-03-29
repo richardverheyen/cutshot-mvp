@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cutshot/services/models.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import '../services/services.dart';
+import 'package:cutshot/services/services.dart';
 
 class VideoItem extends StatelessWidget {
   const VideoItem({super.key, required this.video});

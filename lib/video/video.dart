@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'dart:async';
 
 import 'package:cutshot/services/services.dart';
-import 'package:cutshot/video/video_selector.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cutshot/video/video_trimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class VideoScreen extends StatefulWidget {
   final Video video;
@@ -16,8 +16,6 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  double _progress = 0;
-
   @override
   void initState() {
     super.initState();
@@ -25,9 +23,36 @@ class _VideoScreenState extends State<VideoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Provider.of<Directory>(context).path;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.video.title),
+        actions: [
+          widget.video.videoStored
+              ? Container()
+              : IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.upload,
+                  ),
+                  // ignore: avoid_returning_null_for_void
+                  onPressed: () => null),
+          widget.video.videoStored
+              ? IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.scissors,
+                  ),
+                  // ignore: avoid_returning_null_for_void
+                  onPressed: () => null)
+              : Container(),
+          IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.fileExport,
+              ),
+
+              // ignore: avoid_returning_null_for_void
+              onPressed: () => null),
+        ],
       ),
       // body: const VideoSelectorWidget()
       body: Center(
@@ -35,6 +60,7 @@ class _VideoScreenState extends State<VideoScreen> {
           children: [
             Container(
               color: Colors.black,
+              height: 240,
               child: Stack(
                 children: [
                   Center(
@@ -46,7 +72,7 @@ class _VideoScreenState extends State<VideoScreen> {
                         )),
                   ),
                   Center(
-                      heightFactor: 5.5,
+                      heightFactor: 240,
                       child: CircularProgressIndicator(
                           backgroundColor: Colors.grey.shade400,
                           value: widget.video.uploadProgress / 100)),
@@ -68,7 +94,10 @@ class _VideoScreenState extends State<VideoScreen> {
                         child: Text(widget.video.videoStored
                             ? 'Video Stored!'
                             : 'Upload Video')))),
-            // const VideoSelectorWidget()
+            VideoTrimmerWidget(
+              videoFile: File("$dir/${widget.video.videoPath}"),
+              onTrimmingComplete: (File file) => {},
+            ),
           ],
         ),
       ),

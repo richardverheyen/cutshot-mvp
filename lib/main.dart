@@ -41,21 +41,21 @@ class _AppState extends State<App> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          // return MultiProvider(
-          //     providers: [
-          //       FutureProvider<Directory>(
-          //           initialData: Directory(""),
-          //           create: (_) => getApplicationDocumentsDirectory()),
-          //     ],
-          //     child: MaterialApp(
-          //         debugShowCheckedModeBanner: true,
-          //         home: const HomeScreen(),
-          //         theme: appTheme));
+          return MultiProvider(
+              providers: [
+                FutureProvider<Directory>(
+                    initialData: Directory(''),
+                    create: (_) => getApplicationDocumentsDirectory()),
+              ],
+              child: MaterialApp(
+                  debugShowCheckedModeBanner: true,
+                  home: const HomeScreen(),
+                  theme: appTheme));
 
-          return MaterialApp(
-              debugShowCheckedModeBanner: true,
-              home: const HomeScreen(),
-              theme: appTheme);
+          // return MaterialApp(
+          //     debugShowCheckedModeBanner: true,
+          //     home: const HomeScreen(),
+          //     theme: appTheme);
         }
 
         return const MaterialApp(home: LoadingScreen());
