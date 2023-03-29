@@ -62,32 +62,24 @@ class Video {
 }
 
 class Highlight {
-  // final String id;
-  final double start;
-  final double end;
-  late String outputPath;
+  final String id;
+  final num start;
+  final num end;
 
-  Highlight(
-      {
-      // required this.id,
-      required this.start,
-      required this.end,
-      this.outputPath = ''});
+  Highlight({this.id = "", this.start = 9, this.end = 19});
 
   Highlight.fromJson(String id, Map<String, dynamic> json)
       : this(
-          // id: id,
-          start: json['start']! as double,
-          end: json['end']! as double,
-          outputPath: json['outputPath']! as String,
+          id: id,
+          start: json['start']! as num,
+          end: json['end']! as num,
         );
 
   Map<String, dynamic> toJson() {
     return {
-      // 'id': id,
+      'id': id,
       'start': start,
       'end': end,
-      'outputPath': outputPath,
     };
   }
 }

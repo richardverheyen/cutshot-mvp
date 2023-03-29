@@ -33,11 +33,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
     await videoPermFile.writeAsBytes(await videoXFile.readAsBytes());
 
     final thumbnailPath = await VideoThumbnail.thumbnailFile(
-      video: videoPermFile.path,
-      imageFormat: ImageFormat.WEBP,
-      maxWidth: 0,
-      maxHeight: 0,
-    );
+        video: videoPermFile.path,
+        imageFormat: ImageFormat.WEBP,
+        maxWidth: 0,
+        maxHeight: 0,
+        timeMs: 0);
 
     Video video = Video(
         id: '',

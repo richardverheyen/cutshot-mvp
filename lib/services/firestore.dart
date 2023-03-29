@@ -20,7 +20,19 @@ class FirestoreService {
             .toList());
   }
 
+  Stream<List<Highlight>> streamHighlightList(String id) {
+    return _db
+        .collection("videos")
+        .doc(id)
+        .collection('highlights')
+        .snapshots()
+        .map((snapShot) => snapShot.docs
+            .map((doc) => Highlight.fromJson(doc.id, doc.data()))
+            .toList());
+  }
+
   inferVideo(String id) async {
+    print('Infering video $id');
     _db.collection('videos').doc(id).collection('highlights').add({
       "start": 1,
       "end": 2,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cutshot/video/video.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +26,17 @@ class VideoItem extends StatelessWidget {
                         StreamProvider<List<Video>>(initialData: [
                           video
                         ], create: (_) => FirestoreService().streamVideoList()),
+                        StreamProvider<List<Highlight>>(
+                            initialData: [Highlight()],
+                            catchError: (context, error) {
+                              print(error);
+                              return [Highlight()];
+                            },
+                            create: (_) => FirestoreService()
+                                .streamHighlightList(video.id)),
+                        FutureProvider<Directory>(
+                            initialData: Directory(''),
+                            create: (_) => getApplicationDocumentsDirectory()),
                       ], child: VideoScreen(id: video.id))),
 
               // VideoScreen(id: video.id),
