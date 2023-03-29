@@ -43,7 +43,12 @@ class VideoScreen extends StatelessWidget {
               ),
 
               // ignore: avoid_returning_null_for_void
-              onPressed: highlights ? null : null),
+              onPressed: !highlights
+                  ? () => VideoService().exportVideo(video, [
+                        Highlight(start: 1, end: 2),
+                        Highlight(start: 3, end: 4)
+                      ])
+                  : null),
         ],
       ),
       // body: const VideoSelectorWidget()
