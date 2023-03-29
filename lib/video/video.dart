@@ -28,8 +28,8 @@ class VideoScreen extends StatelessWidget {
       final thumbnail = await VideoThumbnail.thumbnailFile(
           video: "${dir.path}/${video.videoPath}",
           imageFormat: ImageFormat.WEBP,
-          maxWidth: 100,
-          maxHeight: 100,
+          maxWidth: 0,
+          maxHeight: 0,
           timeMs: 1000 * highlight.start as int);
       return thumbnail;
     }
@@ -109,25 +109,60 @@ class VideoScreen extends StatelessWidget {
                   crossAxisCount: 3, crossAxisSpacing: 2, mainAxisSpacing: 2),
               itemBuilder: (BuildContext context, int index) {
                 final Highlight highlight = highlights[index];
-                return Container(
-                  child: FutureBuilder(
-                    future: getThumbnail(highlight),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          return Image.asset(
-                            snapshot.data!,
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
-                          );
-                          // return Text(snapshot.data!.toString());
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
+
+                return Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    FutureBuilder(
+                      future: getThumbnail(highlight),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData) {
+                            return SizedBox(
+                                width: double.infinity,
+                                height: double.infinity,
+                                child: Image.asset(
+                                  snapshot.data!,
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center,
+                                ));
+                            // return Text(snapshot.data!.toString());
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
                         }
-                      }
-                      return const CircularProgressIndicator();
-                    },
-                  ),
+                        return const Center(
+                          child: SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator()),
+                        );
+                      },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withOpacity(0.0),
+                            Colors.white.withOpacity(0.4),
+                          ],
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text("${highlight.start.toString()}s"),
+                            Text("${highlight.end.toString()}s")
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),

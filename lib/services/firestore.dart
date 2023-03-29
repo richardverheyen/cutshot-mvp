@@ -25,6 +25,7 @@ class FirestoreService {
         .collection("videos")
         .doc(id)
         .collection('highlights')
+        .orderBy('start', descending: false)
         .snapshots()
         .map((snapShot) => snapShot.docs
             .map((doc) => Highlight.fromJson(doc.id, doc.data()))
