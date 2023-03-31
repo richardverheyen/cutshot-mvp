@@ -3,3 +3,4 @@ export 'firestore.dart';
 export 'models.dart';
 export 'storage.dart';
 export 'video.dart';
+export 'functions.dart';

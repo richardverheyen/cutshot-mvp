@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cutshot/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +52,7 @@ class VideoScreen extends StatelessWidget {
               ),
               // ignore: avoid_returning_null_for_void
               onPressed: video.videoStored
-                  ? () => FirestoreService().inferVideo(video.id)
+                  ? () => FunctionsService().inferOnVideo({"videoId": video.id})
                   : null),
           IconButton(
               icon: const Icon(

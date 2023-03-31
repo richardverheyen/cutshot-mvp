@@ -54,6 +54,7 @@ dependencies:
   video_player: ^2.6.0
   ffmpeg_kit_flutter: ^4.5.0
   gallery_saver: ^2.3.2
+  cloud_functions: ^4.1.0
 
 dev_dependencies:
   flutter_test:
