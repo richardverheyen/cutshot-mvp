@@ -44,7 +44,7 @@ class VideoScreen extends StatelessWidget {
                 FontAwesomeIcons.scissors,
               ),
               // ignore: avoid_returning_null_for_void
-              onPressed: video.videoStored
+              onPressed: video.uploadComplete
                   ? () => FunctionsService().inferOnVideo({"videoId": video.id})
                   : null),
           IconButton(
@@ -69,7 +69,7 @@ class VideoScreen extends StatelessWidget {
                   child: Hero(
                       tag: video.id,
                       child: Image.asset(
-                        video.thumbnailPath,
+                        video.thumbnailPaths.first,
                         fit: BoxFit.contain,
                       )),
                 ),

@@ -72,9 +72,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, crossAxisSpacing: 2, mainAxisSpacing: 2),
         itemBuilder: (BuildContext context, int index) {
-          return VideoItem(
-            video: videoList[index],
-          );
+          if (videoList[index].id.isNotEmpty) {
+            return VideoItem(
+              video: videoList[index],
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(

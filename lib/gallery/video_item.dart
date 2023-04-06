@@ -38,8 +38,6 @@ class VideoItem extends StatelessWidget {
                             initialData: Directory(''),
                             create: (_) => getApplicationDocumentsDirectory()),
                       ], child: VideoScreen(id: video.id))),
-
-              // VideoScreen(id: video.id),
             );
           },
           child: Stack(
@@ -53,7 +51,7 @@ class VideoItem extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           return Image.asset(
-                            video.thumbnailPath,
+                            video.thumbnailPaths.first,
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                           );
@@ -81,7 +79,7 @@ class VideoItem extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           DateFormat('d/MMM').format(
-                            video.createdDate ?? DateTime.now(),
+                            video.createdDate as DateTime,
                           ),
                           style: const TextStyle(
                             height: 1.5,
@@ -94,17 +92,17 @@ class VideoItem extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          video.videoStored
+                          video.uploadComplete
                               ? Icons.visibility
                               : Icons.visibility_off,
                           size: 18,
                         ),
                         const SizedBox(width: 4),
                         Icon(
-                          video.videoStored
+                          video.uploadComplete
                               ? Icons.cloud_done_outlined
                               : Icons.cloud_off,
-                          color: video.videoStored
+                          color: video.uploadComplete
                               ? Colors.greenAccent.shade400
                               : Colors.black,
                           size: 18,
@@ -121,8 +119,7 @@ class VideoItem extends StatelessWidget {
                       height: double.infinity,
                       child: Center(
                         child: CircularProgressIndicator(
-                            backgroundColor: Colors.grey.shade400,
-                            value: video.uploadProgress / 100),
+                            backgroundColor: Colors.grey.shade400),
                       ))
                   : const SizedBox(),
             ],

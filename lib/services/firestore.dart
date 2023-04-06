@@ -103,6 +103,7 @@ class FirestoreService {
       "durationMs": videoDurationMs,
       "sizeX": controller.value.size.width,
       "sizeY": controller.value.size.height,
+      "createdDate": await videoXFile.lastModified(),
       "uploading": true
     });
 
@@ -125,7 +126,7 @@ class FirestoreService {
 
     Future.wait(futures).then((_) {
       print("All uploads complete");
-      ref.update({"uploading": true, "uploadComplete": true});
+      ref.update({"uploading": false, "uploadComplete": true});
       // Your code to be executed when all the uploads are complete
     });
   }
