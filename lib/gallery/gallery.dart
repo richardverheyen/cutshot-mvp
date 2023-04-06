@@ -19,35 +19,35 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
-  final ImagePicker _picker = ImagePicker();
+  // final ImagePicker _picker = ImagePicker();
 
-  Future<void> _addVideoToFirebase() async {
-    final XFile? videoXFile = await _picker.pickVideo(
-        source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
+  // Future<void> _addVideoToFirebase() async {
+  //   final XFile? videoXFile = await _picker.pickVideo(
+  //       source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
 
-    // perm directory
-    final Directory appDir = await getApplicationDocumentsDirectory();
-    final String appDirPath = appDir.path;
-    final videoPermFile =
-        await File(videoXFile!.path).copy('$appDirPath/${videoXFile.name}');
-    await videoPermFile.writeAsBytes(await videoXFile.readAsBytes());
+  //   // perm directory
+  //   final Directory appDir = await getApplicationDocumentsDirectory();
+  //   final String appDirPath = appDir.path;
+  //   final videoPermFile =
+  //       await File(videoXFile!.path).copy('$appDirPath/${videoXFile.name}');
+  //   await videoPermFile.writeAsBytes(await videoXFile.readAsBytes());
 
-    final thumbnailPath = await VideoThumbnail.thumbnailFile(
-        video: videoPermFile.path,
-        imageFormat: ImageFormat.WEBP,
-        maxWidth: 0,
-        maxHeight: 0,
-        timeMs: 0);
+  //   final thumbnailPath = await VideoThumbnail.thumbnailFile(
+  //       video: videoPermFile.path,
+  //       imageFormat: ImageFormat.WEBP,
+  //       maxWidth: 0,
+  //       maxHeight: 0,
+  //       timeMs: 0);
 
-    Video video = Video(
-        id: '',
-        videoPath: videoPermFile.path,
-        thumbnailPath: thumbnailPath!,
-        createdDate: await videoXFile.lastModified(),
-        title: "");
+  //   Video video = Video(
+  //       id: '',
+  //       videoPath: videoPermFile.path,
+  //       thumbnailPath: thumbnailPath!,
+  //       createdDate: await videoXFile.lastModified(),
+  //       title: "");
 
-    FirestoreService().createVideo(video);
-  }
+  //   FirestoreService().createVideo(video);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addVideoToFirebase,
+        onPressed: FirestoreService().createVideo,
         tooltip: 'Add Video',
         child: const Icon(Icons.add),
       ),

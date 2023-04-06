@@ -41,13 +41,6 @@ class VideoScreen extends StatelessWidget {
         actions: [
           IconButton(
               icon: const Icon(
-                FontAwesomeIcons.upload,
-              ),
-              onPressed: video.videoStored
-                  ? null
-                  : () => FirestoreService().uploadVideo(video)),
-          IconButton(
-              icon: const Icon(
                 FontAwesomeIcons.scissors,
               ),
               // ignore: avoid_returning_null_for_void
@@ -83,22 +76,9 @@ class VideoScreen extends StatelessWidget {
                 video.uploading
                     ? Center(
                         heightFactor: 240,
-                        child: video.uploadProgress == 100
-                            ? Container(
-                                width: 60,
-                                height: 60,
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  FontAwesomeIcons.check,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : CircularProgressIndicator(
-                                backgroundColor: Colors.grey.shade400,
-                                value: video.uploadProgress / 100))
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.grey.shade400,
+                        ))
                     : Container(),
               ],
             ),
