@@ -45,7 +45,8 @@ class VideoScreen extends StatelessWidget {
               ),
               // ignore: avoid_returning_null_for_void
               onPressed: video.uploadComplete
-                  ? () => FunctionsService().inferOnVideo({"videoId": video.id})
+                  ? () => FunctionsService()
+                      .inferOnVideo({"thumbnailPaths": video.thumbnailPaths})
                   : null),
           IconButton(
               icon: const Icon(
